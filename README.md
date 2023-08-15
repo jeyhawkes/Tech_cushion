@@ -50,14 +50,13 @@ go test -v ./...
   
 ## Endpoints:
 
-GET /invest/list/v1/ - Get list of funds 
+### GET /invest/list/v1/ - Get list of funds 
 
-
-GET /invest/customer/v1/*customer_id* - Get fund info about customer
+### GET /invest/customer/v1/*customer_id* - Get fund info about customer
 * v1 CURRENT (client can only choose 1 fund at a time) : Already returns a list of investments for the customer (only 1 will return)
 * v2 (clients can have muliple funds) : NO CHANGES NEED - Will automatically scale to allow the customer to have multiple investments
 
-POST /invest/customer/v1/*customer_id* - Add customer money to fund
+### POST /invest/customer/v1/*customer_id* - Add customer money to fund
 ```golang
 { 
     investment_type_id: int
@@ -70,7 +69,7 @@ v2 (clients can have muliple funds) :
 * If customer investment already exists but IS assoicated with the fund, fail
 
 
-PATCH /invest/customer/v1/*customer_id* - Update customers amount 
+### PATCH /invest/customer/v1/*customer_id* - Update customers amount 
 ```golang
 { 
     investment_type_id: int 
