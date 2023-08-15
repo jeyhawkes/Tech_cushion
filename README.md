@@ -7,6 +7,7 @@ The database is DROPPED and re-created each time on run time so that the senario
 * The tables use an auto incrementing id as a primary key and idenfier (save space and time) - in practice this should probably move towards a UUID
 
 ```SQL
+-- structure for table cushion.customer
 CREATE TABLE `customer` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Allows almost 17 million and natwest has 19million customers so might have to be updated (still use UUID in pratice)',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT 'customer name',
@@ -15,6 +16,7 @@ CREATE TABLE `customer` (
 )
 ```
 
+```SQL
 -- structure for table cushion.investment_types
 CREATE TABLE `investment_types` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Small because there are probably not more than 255 different fund (Would still move to UUID in pratice)', 
@@ -22,7 +24,9 @@ CREATE TABLE `investment_types` (
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 )
+```
 
+```SQL
 CREATE TABLE `customer_investments` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Not used currently (v2 will become important to use to update indiviual customer funds so still move to UUID)  '
   `investment_type_id` tinyint(3) unsigned NOT NULL,
@@ -32,6 +36,7 @@ CREATE TABLE `customer_investments` (
   `updated_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 )
+```
 
 ## Tests 
 The tests show how each api will work in practice and some of the scenarios i considered
@@ -50,16 +55,20 @@ GET /invest/list/v1/ - Get list of funds
 GET /invest/customer/v1/*customer_id* - Get fund info about customer
 
 POST /invest/customer/v1/*customer_id* - Add customer money to fund
+```JSON
 { 
     investment_type_id: int, 
     amount:             int,
 }
+```
 
 PATCH /invest/customer/v1/*customer_id* - Update customers amount 
+```JSON
 { 
     investment_type_id: int, 
     amount:             int,
 }
+```
 
 ## Endpoints return 
 {
