@@ -82,11 +82,11 @@ v2 NEXT STEP
     amount:             int
 }
 ```
-v1 CURRENT (client can only choose 1 fund at a time) :
+v1 CURRENT
 - Uses customer_id as the WHERE as they can have only row. (less calls)
 - Can update both fund and amount at once
 
-v2 NEXT STEP: : 
+v2 NEXT STEP
 - Will have to make an additional call to get the ID of the row
 
 ## Endpoints return 
