@@ -54,11 +54,9 @@ go test -v ./...
 ### GET /invest/list/v1/ - Get list of funds 
 
 ### GET /invest/customer/v1/*customer_id* - Get fund info about customer
-v1 CURRENT: 
-* Already returns a list of investments for the customer (only 1 will return)
+v1 CURRENT: Already returns a list of investments for the customer (only 1 will return)
 
-v2 NEXT STEP: NO CHANGES NEED
-* Will automatically scale to allow the customer to have multiple investments
+v2 NEXT STEP: NO CHANGES NEED: Will automatically scale to allow the customer to have multiple investments
 
 ### POST /invest/customer/v1/*customer_id* - Add customer money to fund
 ```golang
