@@ -71,6 +71,7 @@ PATCH /invest/customer/v1/*customer_id* - Update customers amount
 ```
 
 ## Endpoints return 
+```JSON
 {
   	Transaction_Id int       `json:"Transaction_Id"`
 	  Error_Code     ErrorCode `json:"Error_Code"`
@@ -78,4 +79,4 @@ PATCH /invest/customer/v1/*customer_id* - Update customers amount
 	  Error_Message  string    `json:"Error_Message"`
 	  Data           string    `json:"Data"`
 }
-
+```
