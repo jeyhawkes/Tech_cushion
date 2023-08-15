@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jeyhawkes/tech_cushion/tech_cushion/data"
-	"github.com/jeyhawkes/tech_cushion/tech_cushion/database"
+	"github.com/jeyhawkes/tech_cushion/data"
+	"github.com/jeyhawkes/tech_cushion/database"
 )
 
 func assertStatus(t testing.TB, got, want int) {
