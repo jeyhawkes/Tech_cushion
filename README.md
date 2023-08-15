@@ -6,7 +6,7 @@ The database is DROPPED and re-created each time on run time so that the senario
 ## Database Tables
 * The tables use an auto incrementing id as a primary key and idenfier (save space and time) - in practice this should probably move towards a UUID
 
-```
+```SQL
 CREATE TABLE `customer` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Allows almost 17 million and natwest has 19million customers so might have to be updated (still use UUID in pratice)',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT 'customer name',
