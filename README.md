@@ -57,16 +57,16 @@ GET /invest/customer/v1/*customer_id* - Get fund info about customer
 POST /invest/customer/v1/*customer_id* - Add customer money to fund
 ```golang
 { 
-    investment_type_id: int, 
-    amount:             int,
+    investment_type_id: int
+    amount:             int
 }
 ```
 
 PATCH /invest/customer/v1/*customer_id* - Update customers amount 
 ```golang
 { 
-    investment_type_id: int, 
-    amount:             int,
+    investment_type_id: int 
+    amount:             int
 }
 ```
 
