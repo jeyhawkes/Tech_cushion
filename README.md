@@ -45,7 +45,7 @@ go test -v ./...
 
 ## RESTful 
 * v1 (client can only choose 1 fund at a time)
-* v2 (clients can have muliple funds) - NOT IMPLEMENT (just nots for how this would be developed)
+* v2 (clients can have muliple funds) - NOT IMPLEMENT (just notes for how this would be developed)
 * Should add some level of auth (basicAuth, OAuth, etc...)
 * Should add a timestamp on incoming comms (protection against replay attacks)
   
