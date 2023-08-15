@@ -9,8 +9,7 @@ Database Tables
 
 Customer
 
-go test ./.. or
-go test ./handlers/
+go test -v ./...
 
 the tests show how each api will work in practice and some of the scenarios i considered
 
