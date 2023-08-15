@@ -14,12 +14,25 @@ go test -v ./...
 the tests show how each api will work in practice and some of the scenarios i considered
 
 RESTful 
+* Should add some level of auth (basicAuth, OAuth, etc...)
+* v1 (client can only choose 1 fund at a time)
+  
 Endpoints:
-POST /invest/customer/v1/*customer_id*
 
-GET /invest/customer/v1/*customer_id*
+GET /invest/list/v1/ - Get list of funds 
 
-PATCH /invest/customer/v1/*customer_id*
+GET /invest/customer/v1/*customer_id* - Get fund info about customer
 
-GET /invest/list/v1/
+POST /invest/customer/v1/*customer_id* - Add customer money to fund
+{ 
+    investment_type_id: int, 
+    Amount:             int,
+}
+
+PATCH /invest/customer/v1/*customer_id* - Update customers amount 
+{ 
+    investment_type_id: int, 
+    Amount:             int,
+}
+
 
