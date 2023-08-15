@@ -55,7 +55,7 @@ GET /invest/list/v1/ - Get list of funds
 GET /invest/customer/v1/*customer_id* - Get fund info about customer
 
 POST /invest/customer/v1/*customer_id* - Add customer money to fund
-```JSON
+```golang
 { 
     investment_type_id: int, 
     amount:             int,
@@ -63,7 +63,7 @@ POST /invest/customer/v1/*customer_id* - Add customer money to fund
 ```
 
 PATCH /invest/customer/v1/*customer_id* - Update customers amount 
-```JSON
+```golang
 { 
     investment_type_id: int, 
     amount:             int,
