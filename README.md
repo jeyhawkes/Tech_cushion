@@ -71,9 +71,9 @@ PATCH /invest/customer/v1/*customer_id* - Update customers amount
 ```
 
 ## Endpoints return 
-```JSON
+```golang
 {
-  	Transaction_Id int       `json:"Transaction_Id"`
+	Transaction_Id int       `json:"Transaction_Id"`
 	  Error_Code     ErrorCode `json:"Error_Code"`
 	  Timestamp      int64     `json:"Timestamp"`
 	  Error_Message  string    `json:"Error_Message"`
