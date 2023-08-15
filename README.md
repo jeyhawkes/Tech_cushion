@@ -55,10 +55,10 @@ go test -v ./...
 
 ### GET /invest/customer/v1/*customer_id* - Get fund info about customer
 v1 CURRENT
-* Already returns a list of investments for the customer (only 1 will return)
+- Already returns a list of investments for the customer (only 1 will return)
 
-v2 NEXT STEP 
-* NO CHANGES NEED: Will automatically scale to allow the customer to have multiple investments
+v2 NEXT STEP (NO CHANGES NEED)
+- Will automatically scale to allow the customer to have multiple investments
 
 ### POST /invest/customer/v1/*customer_id* - Add customer money to fund
 ```golang
@@ -67,10 +67,10 @@ v2 NEXT STEP
     amount:             int
 }
 ```
-v1 CURRENT: 
+v1 CURRENT
 - If customer investment already exists, fail
 
-v2 NEXT STEP:
+v2 NEXT STEP
 - If customer investment already exists but NOT assoicated with the fund, pass
 - If customer investment already exists but IS assoicated with the fund, fail
 
