@@ -12,6 +12,7 @@ import (
 
 	"github.com/jeyhawkes/tech_cushion/data"
 	"github.com/jeyhawkes/tech_cushion/database"
+	"github.com/jeyhawkes/tech_cushion/setup"
 )
 
 func assertStatus(t testing.TB, got, want int) {
@@ -57,7 +58,7 @@ func TestGetList(t *testing.T) {
 	defer db.Close()
 	investhttp := NewInvestmentHTTP(&db)
 
-	request, _ := http.NewRequest(http.MethodGet, "/invest/list/", nil)
+	request, _ := http.NewRequest(http.MethodGet, "/invest/list/v1/", nil)
 	response := httptest.NewRecorder()
 
 	investhttp.HandleInvestment(response, request)
@@ -132,8 +133,8 @@ func TestCreateCustomerInvestment(t *testing.T) {
 	}
 
 	var db database.Database
-	if err := db.ConnectDefault(); err != nil {
-		t.Errorf("database error %s ", err.Error())
+	if err := setup.Db(&db); err != nil {
+		t.Errorf("Couldn't create db : %s", err)
 	}
 	defer db.Close()
 	investhttp := NewInvestmentHTTP(&db)

@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/jeyhawkes/tech_cushion/database"
+	"github.com/jeyhawkes/tech_cushion/handlers"
+	"github.com/jeyhawkes/tech_cushion/setup"
 )
 
 const (
@@ -15,28 +17,15 @@ const (
 func main() {
 
 	var db database.Database
-	/*
-		if err := db.Connect(db_username, db_password, ""); err != nil {
-			panic(err)
-		}
-		defer db.Close()
 
-		// Clean database
-		if err := db.CreateDatabase(db_name); err != nil {
-			panic(err)
-		}
-	*/
-
-	if err := db.Connect(db_username, db_password, db_name); err != nil {
+	if err := setup.Db(&db); err != nil {
 		panic(err)
 	}
+	defer db.Close()
 
-	if err := db.Run("./table_create.sql"); err != nil {
-		panic(err)
-	}
-
-	//http.HandleFunc("/inves", getRoot)
-	//http.HandleFunc("/hello", getHello)
+	investhttp := handlers.NewInvestmentHTTP(&db)
+	http.HandleFunc("/invest/list/v1/", investhttp.HandleInvestment)
+	http.HandleFunc("/invest/customer/v1/", investhttp.HandleCustomerInvestment)
 
 	http.ListenAndServe(":8080", nil)
 }

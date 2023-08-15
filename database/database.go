@@ -23,7 +23,7 @@ func (db *Database) ConnectDefault() error {
 func (db *Database) Connect(username, password, database string) error {
 	var err error
 
-	s := fmt.Sprintf("%s:%s@/%s", username, password, database)
+	s := fmt.Sprintf("%s:%s@/%s?multiStatements=true", username, password, database)
 
 	db.conn, err = sql.Open("mysql",
 		s)
