@@ -68,11 +68,11 @@ v2 NEXT STEP: NO CHANGES NEED
 }
 ```
 v1 CURRENT: 
-* If customer investment already exists, fail
+- If customer investment already exists, fail
 
 v2 NEXT STEP:
-* If customer investment already exists but NOT assoicated with the fund, pass
-* If customer investment already exists but IS assoicated with the fund, fail
+- If customer investment already exists but NOT assoicated with the fund, pass
+- If customer investment already exists but IS assoicated with the fund, fail
 
 
 ### PATCH /invest/customer/v1/*customer_id* - Update customers amount 
@@ -83,11 +83,11 @@ v2 NEXT STEP:
 }
 ```
 v1 CURRENT (client can only choose 1 fund at a time) :
-* Uses customer_id as the WHERE as they can have only row. (less calls)
-* Can update both fund and amount at once
+- Uses customer_id as the WHERE as they can have only row. (less calls)
+- Can update both fund and amount at once
 
 v2 NEXT STEP: : 
-* Will have to make an additional call to get the ID of the row
+- Will have to make an additional call to get the ID of the row
 
 ## Endpoints return 
 ```golang
