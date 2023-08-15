@@ -12,6 +12,7 @@ import (
 
 	"github.com/jeyhawkes/tech_cushion/data"
 	"github.com/jeyhawkes/tech_cushion/database"
+	"github.com/jeyhawkes/tech_cushion/logger"
 	"github.com/jeyhawkes/tech_cushion/setup"
 )
 
@@ -51,12 +52,18 @@ func assertResponseBody(t testing.TB, got string, want data.HTTPReturnData) {
 
 func TestGetList(t *testing.T) {
 
+	var log logger.Logger
+	var err error
+	if log, err = logger.NewLogger("log.txt"); err != nil {
+		t.Errorf("Couldn't create log : %s", err)
+	}
+
 	var db database.Database
 	if err := db.ConnectDefault(); err != nil {
 		t.Errorf("database error %s ", err.Error())
 	}
 	defer db.Close()
-	investhttp := NewInvestmentHTTP(&db)
+	investhttp := NewInvestmentHTTP(&db, &log)
 
 	request, _ := http.NewRequest(http.MethodGet, "/invest/list/v1/", nil)
 	response := httptest.NewRecorder()
@@ -132,12 +139,18 @@ func TestCreateCustomerInvestment(t *testing.T) {
 		},
 	}
 
+	var log logger.Logger
+	var err error
+	if log, err = logger.NewLogger("log.txt"); err != nil {
+		t.Errorf("Couldn't create log : %s", err)
+	}
+
 	var db database.Database
 	if err := setup.Db(&db); err != nil {
 		t.Errorf("Couldn't create db : %s", err)
 	}
 	defer db.Close()
-	investhttp := NewInvestmentHTTP(&db)
+	investhttp := NewInvestmentHTTP(&db, &log)
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -192,12 +205,18 @@ func TestGetCustomerInvestment(t *testing.T) {
 		},
 	}
 
+	var log logger.Logger
+	var err error
+	if log, err = logger.NewLogger("log.txt"); err != nil {
+		t.Errorf("Couldn't create log : %s", err)
+	}
+
 	var db database.Database
 	if err := db.ConnectDefault(); err != nil {
 		t.Errorf("database error %s ", err.Error())
 	}
 	defer db.Close()
-	investhttp := NewInvestmentHTTP(&db)
+	investhttp := NewInvestmentHTTP(&db, &log)
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -299,12 +318,18 @@ func TestUpdateCustomerInvestment(t *testing.T) {
 		},
 	}
 
+	var log logger.Logger
+	var err error
+	if log, err = logger.NewLogger("log.txt"); err != nil {
+		t.Errorf("Couldn't create log : %s", err)
+	}
+
 	var db database.Database
 	if err := db.ConnectDefault(); err != nil {
 		t.Errorf("database error %s ", err.Error())
 	}
 	defer db.Close()
-	investhttp := NewInvestmentHTTP(&db)
+	investhttp := NewInvestmentHTTP(&db, &log)
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

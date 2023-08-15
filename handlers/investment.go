@@ -13,18 +13,20 @@ import (
 
 	"github.com/jeyhawkes/tech_cushion/data"
 	"github.com/jeyhawkes/tech_cushion/database"
+	"github.com/jeyhawkes/tech_cushion/logger"
 )
 
 const ERROR_DATABASE_READ = "Could not read from data base"
 
+// MUST:: Make sure databse and logger are passed by pointer so it can be run as go routine
 type investmentHTTP struct {
-	db *database.Database
-	// log
+	db            *database.Database
+	log           *logger.Logger
 	transactionId int
 }
 
-func NewInvestmentHTTP(db *database.Database) investmentHTTP {
-	return investmentHTTP{db: db}
+func NewInvestmentHTTP(db *database.Database, log *logger.Logger) investmentHTTP {
+	return investmentHTTP{db: db, log: log}
 }
 
 func (invest_http *investmentHTTP) HandleInvestment(w http.ResponseWriter, req *http.Request) {
@@ -43,10 +45,16 @@ func (invest_http *investmentHTTP) HandleInvestment(w http.ResponseWriter, req *
 func (invest_http *investmentHTTP) HandleCustomerInvestment(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	// increament transactionId to keep track and log
+	invest_http.transactionId += 1
+
 	url_split := strings.Split(req.URL.Path, "/")
+
+	invest_http.log.LogInfo(invest_http.transactionId, req.URL.Path)
 
 	// Endpoints only require customer_id
 	if len(url_split) != 5 {
+		invest_http.log.LogError(invest_http.transactionId, "Invalid URL")
 		invest_http.writeHTTPOutput(w, invest_http.transactionId, data.ErrorHTTP[data.ErrorInvalidReqeust], "")
 		return
 	}
@@ -54,12 +62,10 @@ func (invest_http *investmentHTTP) HandleCustomerInvestment(w http.ResponseWrite
 	customer_id, err := strconv.Atoi(url_split[4])
 
 	if err != nil {
+		invest_http.log.LogError(invest_http.transactionId, "Invalid Customer Id")
 		invest_http.writeHTTPOutput(w, invest_http.transactionId, data.ErrorHTTP[data.ErrorAlreadyExists], "")
 		return
 	}
-
-	// increament transactionId to keep track and log
-	invest_http.transactionId += 1
 
 	switch req.Method {
 	case http.MethodGet:
@@ -80,12 +86,14 @@ func (invest_http *investmentHTTP) GetInvestmentList(w http.ResponseWriter, req 
 
 	var list []data.InvestmentList
 	if err := invest_http.getInvestmentList(&list); err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorDatabaseRead], "")
 		return
 	}
 
 	j, err := json.Marshal(list)
 	if err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorJsonWrite], "")
 		return
 	}
@@ -102,24 +110,31 @@ V2 (clients can have muliple funds) : NO CHANGES NEED
 */
 
 func (invest_http *investmentHTTP) GetCustomerInvestment(w http.ResponseWriter, req *http.Request, transactionId int, customerId database.UMEDUIMINT) {
+
+	invest_http.log.LogInfo(invest_http.transactionId, fmt.Sprintf("customer_id : %d", customerId))
+
 	// is valid inputs
 	exists, err := invest_http.validateInputs(&customerId, nil)
 	if err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorDatabaseRead], "")
 		return
 	} else if !exists {
+		invest_http.log.LogError(transactionId, "Invalid input")
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorInvalidReqeust], "")
 		return
 	}
 
 	var list []data.CustomerInvestmentData
 	if err := invest_http.getCustomerInvestment(customerId, &list); err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorDatabaseRead], "")
 		return
 	}
 
 	j, err := json.Marshal(list)
 	if err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorJsonWrite], "")
 		return
 	}
@@ -136,6 +151,8 @@ V2 (clients can have muliple funds) :
 - If customer investment already exists but IS assoicated with the fund, fail
 */
 func (invest_http *investmentHTTP) CreateCustomerInvestment(w http.ResponseWriter, req *http.Request, transactionId int, customerId database.UMEDUIMINT) {
+	invest_http.log.LogInfo(invest_http.transactionId, fmt.Sprintf("customer_id : %d", customerId))
+	invest_http.log.LogInfo(invest_http.transactionId, fmt.Sprintf("inputs : %d", req.Body))
 
 	// Get post parameters
 	decoder := json.NewDecoder(req.Body)
@@ -143,15 +160,18 @@ func (invest_http *investmentHTTP) CreateCustomerInvestment(w http.ResponseWrite
 	err := decoder.Decode(&post_params)
 
 	if err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorInvalidReqeust], "")
 	}
 
 	// is valid inputs
 	exists, err := invest_http.validateInputs(&customerId, &post_params.Investment_Type_Id)
 	if err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorDatabaseRead], "")
 		return
 	} else if !exists {
+		invest_http.log.LogError(transactionId, "Invalid input")
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorInvalidReqeust], "")
 		return
 	}
@@ -161,6 +181,7 @@ func (invest_http *investmentHTTP) CreateCustomerInvestment(w http.ResponseWrite
 	if invest_http.db.SELECT("customer_investments", "*", fmt.Sprintf("customer_id = %d", customerId), &rows) == nil {
 		defer rows.Close()
 		if rows.Next() {
+			invest_http.log.LogError(transactionId, "Already Exists")
 			invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorAlreadyExists], "")
 			return
 		}
@@ -173,6 +194,7 @@ func (invest_http *investmentHTTP) CreateCustomerInvestment(w http.ResponseWrite
 	}
 
 	if err := invest_http.db.INSERT("customer_investments", db_params); err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorDatabaseWrite], "")
 		return
 	}
@@ -190,21 +212,27 @@ V2 (clients can have muliple funds) :
 */
 
 func (invest_http *investmentHTTP) UpdateCustomerInvestment(w http.ResponseWriter, req *http.Request, transactionId int, customerId database.UMEDUIMINT) {
+	invest_http.log.LogInfo(invest_http.transactionId, fmt.Sprintf("customer_id : %d", customerId))
+	invest_http.log.LogInfo(invest_http.transactionId, fmt.Sprintf("inputs : %d", req.Body))
+
 	// Get post parameters
 	decoder := json.NewDecoder(req.Body)
 	var post_params data.CustomerInvestmentHTTP
 	err := decoder.Decode(&post_params)
 
 	if err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorInvalidReqeust], "")
 	}
 
 	// is valid inputs
 	exists, err := invest_http.validateInputs(&customerId, &post_params.Investment_Type_Id)
 	if err != nil {
-
+		invest_http.log.LogError(transactionId, err.Error())
+		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorDatabaseRead], "")
 		return
 	} else if !exists {
+		invest_http.log.LogError(transactionId, "Invalid input")
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorInvalidReqeust], "")
 		return
 	}
@@ -212,11 +240,13 @@ func (invest_http *investmentHTTP) UpdateCustomerInvestment(w http.ResponseWrite
 	// check if already exists
 	var rows *sql.Rows
 	if err = invest_http.db.SELECT("customer_investments", "*", fmt.Sprintf("customer_id = %d", customerId), &rows); err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorDatabaseRead], "")
 	}
 
 	defer rows.Close()
 	if !rows.Next() {
+		invest_http.log.LogError(transactionId, "Doesn't exist")
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorInvalidReqeust], "")
 		return
 	}
@@ -227,6 +257,7 @@ func (invest_http *investmentHTTP) UpdateCustomerInvestment(w http.ResponseWrite
 	}
 
 	if err := invest_http.db.UPDATE("customer_investments", db_params, fmt.Sprintf("customer_id = %d", customerId)); err != nil {
+		invest_http.log.LogError(transactionId, err.Error())
 		invest_http.writeHTTPOutput(w, transactionId, data.ErrorHTTP[data.ErrorDatabaseWrite], "")
 		return
 	}

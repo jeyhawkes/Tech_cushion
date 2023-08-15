@@ -2,6 +2,7 @@ package setup
 
 import (
 	"path/filepath"
+	"runtime"
 
 	"github.com/jeyhawkes/tech_cushion/database"
 )
@@ -20,7 +21,10 @@ func Db(db *database.Database) error {
 		return err
 	}
 
-	path := filepath.Join("github.com/jeyhawkes/Tech_cushion/", "setup", "table_create.sql")
+	_, b, _, _ := runtime.Caller(0)
+	basepath := filepath.Dir(b)
+
+	path := filepath.Join(basepath, "table_create.sql")
 	if err := db.Run(path); err != nil {
 		return err
 	}
