@@ -11,9 +11,9 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/jeyhawkes/tech_cushion/data"
-	"github.com/jeyhawkes/tech_cushion/database"
-	"github.com/jeyhawkes/tech_cushion/logger"
+	"github.com/jeyhawkes/tech_cushon/data"
+	"github.com/jeyhawkes/tech_cushon/database"
+	"github.com/jeyhawkes/tech_cushon/logger"
 )
 
 const ERROR_DATABASE_READ = "Could not read from data base"
