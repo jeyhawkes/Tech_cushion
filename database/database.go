@@ -17,7 +17,7 @@ type Database struct {
 
 // / with defaults
 func (db *Database) ConnectDefault() error {
-	return db.Connect("root", "password", "cushion")
+	return db.Connect("root", "password", "cushon")
 }
 
 func (db *Database) Connect(username, password, database string) error {
