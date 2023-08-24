@@ -1,4 +1,4 @@
-module github.com/jeyhawkes/tech_cushion
+module github.com/jeyhawkes/tech_cushon
 
 go 1.19
 
