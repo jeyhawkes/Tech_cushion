@@ -1,6 +1,6 @@
 package data
 
-import "github.com/jeyhawkes/tech_cushion/database"
+import "github.com/jeyhawkes/tech_cushon/database"
 
 // order to save space
 type CustomerInvestmentData struct {
