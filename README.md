@@ -48,6 +48,17 @@ go test -v ./...
 * v2 (clients can have muliple funds) - NOT IMPLEMENT (just notes for how this would be developed)
 * Should add some level of auth (basicAuth, OAuth, etc...)
 * Should add a timestamp on incoming comms (protection against replay attacks)
+
+## Endpoints return 
+```golang
+{
+	Transaction_Id int       `json:"Transaction_Id"`
+	  Error_Code     ErrorCode `json:"Error_Code"`
+	  Timestamp      int64     `json:"Timestamp"`
+	  Error_Message  string    `json:"Error_Message"`
+	  Data           string    `json:"Data"`
+}
+```
   
 ## Endpoints:
 
@@ -89,13 +100,4 @@ v1 CURRENT
 v2 NEXT STEP
 - Will have to make an additional call to get the ID of the row
 
-## Endpoints return 
-```golang
-{
-	Transaction_Id int       `json:"Transaction_Id"`
-	  Error_Code     ErrorCode `json:"Error_Code"`
-	  Timestamp      int64     `json:"Timestamp"`
-	  Error_Message  string    `json:"Error_Message"`
-	  Data           string    `json:"Data"`
-}
-```
+
