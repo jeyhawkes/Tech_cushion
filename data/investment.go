@@ -11,7 +11,7 @@ type InvestmentData struct {
 	Name         database.TINYTEXT
 }
 
-type InvestmentList struct {
+type InvestmentListHttp struct {
 	Investment_Type_Id database.UTINYINT
 	Name               database.TINYTEXT
 }
