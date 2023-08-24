@@ -3,10 +3,10 @@ package main
 import (
 	"net/http"
 
-	"github.com/jeyhawkes/tech_cushion/database"
-	"github.com/jeyhawkes/tech_cushion/handlers"
-	"github.com/jeyhawkes/tech_cushion/logger"
-	"github.com/jeyhawkes/tech_cushion/setup"
+	"github.com/jeyhawkes/tech_cushon/database"
+	"github.com/jeyhawkes/tech_cushon/handlers"
+	"github.com/jeyhawkes/tech_cushon/logger"
+	"github.com/jeyhawkes/tech_cushon/setup"
 )
 
 func main() {
