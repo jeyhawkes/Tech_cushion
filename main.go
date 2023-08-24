@@ -9,12 +9,6 @@ import (
 	"github.com/jeyhawkes/tech_cushion/setup"
 )
 
-const (
-	db_username = "root"
-	db_password = "password"
-	db_name     = "cushion"
-)
-
 func main() {
 
 	var log logger.Logger
