@@ -14,5 +14,4 @@ type CustomerInvestmentData struct {
 type CustomerInvestmentHTTP struct {
 	Investment_Type_Id database.UTINYINT
 	Amount             database.UMEDUIMINT
-	Timestamp          int64
 }
